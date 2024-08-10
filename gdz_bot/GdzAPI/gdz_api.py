@@ -157,7 +157,7 @@ class Chapter:
                 ' '.join(div_book.find("div", {"class": "book__description"}).find("h4", {
                     "class": "book__title"}).text.split()),
                 f"https://gdz.ru{div_book.get("href")}",
-                f"https:{div_book.find("img", {"class": "book__cover"}).get("data-src")}",
+                f"https:{div_book.find("img", {"class": "book__cover"}).get("src")}",
                 book_type,
                 book_authors,
                 book_publisher
