@@ -1,7 +1,7 @@
 import sys
 
 
-sys.path.append("d:\\gdz_bot\\gdz_bot")
+sys.path.append("d:\\fast-gdz\\gdz_bot")
 from GdzAPI import gdz_api
 
 
@@ -13,7 +13,7 @@ import logging
 logger = logging.getLogger(__name__)
 logger.info("started!")
 
-new_user = {"api": 'gdz_api.Api()', "class": 0, "ls_selected_books": []}
+new_user = {"api": "gdz_api.Api()", "class": 0, "ls_selected_books": []}
 
 ls_full_obj = [
     "Математика",
@@ -66,7 +66,7 @@ ls_full_obj = [
 ]
 
 all_users = {
-    "id1": {"api": 'gdz_api.Api()', "class": 8, "ls_selected_books": []},
+    "id1": {"api": "gdz_api.Api()", "class": 8, "ls_selected_books": []},
 }
 
 info_bot = "Бот был создан для помощи пользователям в решении различных задач и вопросов. Он использует ресурсы из интернета для анализа запросов и предоставления ответов. Бот может помочь с выполнением различных задач, связанных с школьной программой. Бот постоянно обновляется и улучшается, чтобы быть более эффективным и полезным для пользователей.\nРазработчик: 404"

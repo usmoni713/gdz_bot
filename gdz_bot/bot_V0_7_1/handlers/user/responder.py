@@ -3,7 +3,8 @@ from bot_V0_7_1.keyboards import buttons as buttons_gdz
 from utils import function
 import sys
 
-sys.path.append("d:\\gdz_bot\\gdz_bot")
+sys.path.append("d:\\fast-gdz\\gdz_bot")
+# D:\fast-gdz\gdz_bot
 from GdzAPI import gdz_api
 from filters import ferma_callbacks
 from database import setupV3 as database
@@ -72,17 +73,9 @@ async def save_obj_get_cgapter(
         chapter_class=user_class, chapter_subject=callback_data.obj
     )
     await chapter.get_books()
-    user_chapter = chapter.books
-
-
-    print('\n\nDEBUG\n\n')
-    for book in user_chapter:
-        print(f'book: {book.title}, cover_url: {book.cover_url}, url: {book.url}')
-    print('\n\nDEBUG\n\n')
-    
     await db.update_user_chapter_in_database(
         user_id=user_id,
-        user_books=user_chapter,
+        user_books=chapter.books,
     )
 
     await callback.message.edit_text(

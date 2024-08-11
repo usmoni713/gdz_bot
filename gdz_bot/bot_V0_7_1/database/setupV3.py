@@ -6,8 +6,9 @@ import asyncpg
 import json
 import sys
 from random import randint
+
 sys.path.append(
-    "d:\\gdz_bot\\gdz_bot"
+    "d:\\fast-gdz\\gdz_bot"
 )  # Добавление пути в список путей для поиска модулей
 from GdzAPI import gdz_api as gdz_api
 

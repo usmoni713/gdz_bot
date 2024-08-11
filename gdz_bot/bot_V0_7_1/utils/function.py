@@ -4,7 +4,7 @@ from pprint import pprint
 import sys
 from typing import Any
 
-sys.path.append("d:\\gdz_bot\\gdz_bot")
+sys.path.append("d:\\fast-gdz\\gdz_bot")
 from GdzAPI import gdz_api
 import bs4
 import bs4, aiohttp, logging

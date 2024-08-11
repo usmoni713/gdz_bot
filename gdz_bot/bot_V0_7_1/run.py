@@ -2,7 +2,7 @@ import asyncio, logging
 import sys
 
 #
-sys.path.append("d:\\gdz_bot\\gdz_bot")
+sys.path.append("d:\\fast-gdz\\gdz_bot")
 
 from handlers.user import user_handlers
 

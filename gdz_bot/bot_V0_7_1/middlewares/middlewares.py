@@ -5,7 +5,7 @@ import sys
 from aiogram.types.chat_member_banned import ChatMemberStatus
 from database import setupV3 as database
 
-sys.path.append("d:\\gdz_bot\\gdz_bot")
+sys.path.append("d:\\fast-gdz\\gdz_bot")
 
 
 from aiogram import BaseMiddleware
@@ -64,6 +64,7 @@ class creat_connection_database(BaseMiddleware):
     """Класс-посредник, который создает подключение
     к базе данных и закрывает его после обработки
     запроса."""
+
     async def __call__(
         self,
         handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
@@ -74,8 +75,8 @@ class creat_connection_database(BaseMiddleware):
         db = database.Database()
         await db._connect()
         db.have_conn = True
-        data['db'] = db
-        data['db_conn'] = db._conn
+        data["db"] = db
+        data["db_conn"] = db._conn
         # print(f'in midleware:: db: {id(db)} db_conn: {id(data['db_conn'])}')
         # ...
         result = await handler(event, data)
@@ -83,7 +84,6 @@ class creat_connection_database(BaseMiddleware):
         print(db.have_conn)
         db.need_close_conn = True
         await db._close()
-
 
         return result
 
