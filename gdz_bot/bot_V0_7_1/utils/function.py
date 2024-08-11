@@ -100,6 +100,15 @@ async def delete_unnecessary_data(
         await db._close()
 
 
+async def get_all_unique_authors(ls_books: list[gdz_api.Book]) -> list[str]:
+    """Функция, которая возвращает список уникальных авторов."""
+    ls_authors = []
+    for book in ls_books:
+        for author in book.authors:
+            ls_authors.append(author)
+    return list(set(ls_authors))
+
+
 async def inform(text) -> None:
     """Функция, которая отправляет сообщение на терминал для DEBUG."""
     print("\n\tDEBUG\n\n")

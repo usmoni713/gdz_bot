@@ -214,6 +214,13 @@ class Database:
             qyuery,
         )
 
+    async def update_user_obj_in_database(self, user_id: int, user_obj: str):
+        """Обновляет данные пользователя в базе данных"""
+        qyuery = f"UPDATE users SET obj = '{user_obj}' WHERE id_user = {user_id};"
+        await self.execute_query(
+            qyuery,
+        )
+
     async def update_user_chapter_in_database(
         self,
         user_id: int,
@@ -365,6 +372,19 @@ class Database:
         user_class = record[0][0].get("class_")
         return user_class
 
+    async def get_user_obj(
+        self, user_id: int):
+        """Получает данные пользователя из базы данных"""
+        record = (
+            await self.get_table_data(
+                table_name="users",
+                field_names=("obj",),
+                conditions=f"id_user = {user_id}",
+            ),
+        )
+        user_obj = record[0][0].get("obj")
+        return user_obj
+
     async def get_user_chapter(
         self,
         user_id: int,
@@ -450,6 +470,7 @@ table_names_with_fields = [
         [
             ("id_user", "BIGINT PRIMARY KEY"),
             ("class_", "SMALLINT"),
+            ("obj", "TEXT"),
             ("chapter", "JSONB"),
             ("user_selected_books", "JSONB"),
             ("selected_book", "JSONB"),

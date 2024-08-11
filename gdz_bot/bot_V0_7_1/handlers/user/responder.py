@@ -54,7 +54,7 @@ async def send_obj(
     await callback.answer()
 
 
-async def save_obj_get_cgapter(
+async def save_obj_get_author(
     callback: CallbackQuery,
     callback_data: ferma_callbacks.choose_obj_CallbackFactory,
     user_id: int = 1234,
@@ -73,13 +73,48 @@ async def save_obj_get_cgapter(
         chapter_class=user_class, chapter_subject=callback_data.obj
     )
     await chapter.get_books()
-    await db.update_user_chapter_in_database(
-        user_id=user_id,
-        user_books=chapter.books,
-    )
+    authors = await function.get_all_unique_authors(ls_books=chapter.books)
 
     await callback.message.edit_text(
-        f"obj:   {callback_data.obj}\n",
+        text=f"Выберите одного автора вашего учебника:",
+        reply_markup=await buttons_gdz.creat_bt_choose_author(
+            ls_authors=authors, db=db
+        ),
+    )
+    await db.update_user_obj_in_database(user_id=user_id, user_obj=callback_data.obj)
+    await callback.answer()
+    if need_to_close_connection:
+        db.need_close_conn = True
+        await db._close()
+
+
+async def save_author_get_cgapter(
+    callback: CallbackQuery,
+    callback_data: ferma_callbacks.choose_author_CallbackFactory,
+    user_id: int = 1234,
+    db: database.Database | None = None,
+):
+    """Функция, которая отправляет сообщение с выбором предмета
+    на основе переданных данных пользов
+    need_to_close_connection = Falseателя. Возвращает None."""
+    need_to_close_connection = False
+    if db is None:
+        db = database.Database()
+        await db._connect()
+        need_to_close_connection = True
+    user_class = await db.get_user_class(user_id=user_id)
+    user_obj = await db.get_user_obj(user_id=user_id)
+    chapter: gdz_api.Chapter = await gdz_api.Api().get_chapter(
+        chapter_class=user_class, chapter_subject=user_obj
+    )
+    await chapter.get_books()
+    user_books = [
+        book for book in chapter.books if callback_data.author in book.authors
+    ]
+    await db.update_user_chapter_in_database(user_id=user_id, user_books=user_books)
+
+    await callback.message.edit_text(
+        f"автор: {callback_data.author}\nвыберите учебник:",
     )
     await db.update_user_auxiliary_variable_in_database(
         user_id=user_id,

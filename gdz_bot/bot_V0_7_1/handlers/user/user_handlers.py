@@ -52,17 +52,34 @@ async def send_obj(
     await rs.send_obj(callback=callback, user_class=user_class)
 
 
-# Обработчик колбека для выбора объекта
 @user_router.callback_query(ferma_callbacks.choose_obj_CallbackFactory.filter())
-async def save_obj_get_cgapter(
+async def save_obj_get_author(
     callback: CallbackQuery,
-    callback_data: ferma_callbacks.choose_obj_CallbackFactory,  # Параметр, содержащий данные колбека (выбранный объект)
+    callback_data: ferma_callbacks.choose_obj_CallbackFactory,  # Параметр, содержащий данные колбека (выбранный автор)
     user_id: int,
     db: database.Database,
 ):
 
     # Вызов функции для обработки выбора объекта
-    await rs.save_obj_get_cgapter(
+    await rs.save_obj_get_author(
+        callback=callback,
+        callback_data=callback_data,
+        user_id=user_id,
+        db=db,
+    )
+
+
+# Обработчик колбека для выбора объекта
+@user_router.callback_query(ferma_callbacks.choose_author_CallbackFactory.filter())
+async def save_author_get_cgapter(
+    callback: CallbackQuery,
+    callback_data: ferma_callbacks.choose_author_CallbackFactory,  # Параметр, содержащий данные колбека (выбранный объект)
+    user_id: int,
+    db: database.Database,
+):
+
+    # Вызов функции для обработки выбора объекта
+    await rs.save_author_get_cgapter(
         callback=callback,
         callback_data=callback_data,
         user_id=user_id,
@@ -97,7 +114,6 @@ async def save_book_get_section(
     callback_data: ferma_callbacks.choose_book_CallbackFactory,  # Параметр, содержащий данные колбека (например, выбранная книга)
     user_id: int,
     db: database.Database,
-
 ):
     # Сохранение выбранной книги в информации о пользователе
     user_chapter = (
@@ -170,7 +186,6 @@ async def save_book_in_ls_selected_books(
                 edit_text=True,
                 db=db,
             )
-
 
 
 @user_router.callback_query(
@@ -268,7 +283,6 @@ async def save_number_send_answer(
     db: database.Database,
 ):
 
-
     # Получение URL вопроса по номеру
     user_book = await db.get_user_selected_book(
         user_id=user_id,
@@ -291,7 +305,7 @@ async def save_number_send_answer(
                 url_num = i.url
                 break
     else:
-        print(f'[error]in user_handlers.save_number_send_answer: {numbers=}')
+        print(f"[error]in user_handlers.save_number_send_answer: {numbers=}")
     # url_num = section_structure[section]
     user_number: gdz_api.Number = gdz_api.Number(url=url_num, num="")
     # Получение ответов на вопросы по URL

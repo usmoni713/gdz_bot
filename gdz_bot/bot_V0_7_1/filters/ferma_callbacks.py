@@ -107,6 +107,22 @@ class choose_class_CallbackFactory(CallbackData, prefix="choose_class", sep="~")
     erase_user_data_up_to_this_point: bool = False
 
 
+class choose_author_CallbackFactory(CallbackData, prefix="choose_author", sep="~"):
+    """
+    Callback factory for choosing an author.
+
+    Sends the chosen author as a parameter.
+
+    Args:
+        author (str): Name of the author to choose.
+        erase_user_data_up_to_this_point (bool): Whether to delete all user data
+            up to this point. Default: False.
+
+    """
+
+    author: str
+
+
 class choose_book_and_cover_CallbackFactory(
     CallbackData, prefix="choose_cover", sep="~"
 ):

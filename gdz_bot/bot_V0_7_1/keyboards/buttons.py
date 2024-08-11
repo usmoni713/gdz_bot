@@ -121,7 +121,7 @@ async def get_bt_numbers(ls_numbers: list[gdz_api.Number]):
     return bt_numbers.as_markup()
 
 
-async def generate_bt_choose_sl_book(user_id: int, db: database.Database|None = None):
+async def generate_bt_choose_sl_book(user_id: int, db: database.Database | None = None):
     """Функция, которая создает клавиатуру для выбора книги и перелистывания"""
     need_close_db = False
     if db is None:
@@ -189,7 +189,35 @@ async def generate_bt_choose_sl_book(user_id: int, db: database.Database|None = 
     return bt_choose_obj.as_markup()
 
 
-async def creat_bt_choose_book(user_id: int, for_sl_book: bool = False,db: database.Database|None = None):
+async def creat_bt_choose_author(
+    ls_authors: list[str], db: database.Database | None = None
+):
+    """Функция, которая создает клавиатуру для выбора автора"""
+
+    bt_choose_author = InlineKeyboardBuilder()
+
+    need_close_conn = False
+    if db is None:
+        db = database.Database()
+        db._conn()
+        need_close_conn = True
+
+    for author in ls_authors:
+        bt_choose_author.button(
+            text=author,
+            callback_data=choose_author_CallbackFactory(author=author),
+        )
+    if need_close_conn:
+        db.need_close_conn = True
+        await db._close()
+        db.need_close_conn = False
+    bt_choose_author.adjust(2)
+    return bt_choose_author.as_markup()
+
+
+async def creat_bt_choose_book(
+    user_id: int, for_sl_book: bool = False, db: database.Database | None = None
+):
     """Функция, которая создает клавиатуру для выбора книги и перелистывания"""
     if for_sl_book:
         bt_choose_books = await generate_bt_choose_sl_book(user_id=user_id)
@@ -207,7 +235,7 @@ async def creat_bt_choose_book(user_id: int, for_sl_book: bool = False,db: datab
     c = await db.get_user_auxiliary_variable(user_id=user_id)
     all_page = len(user_chapter)
     del user_chapter
-    current_page = c +1
+    current_page = c + 1
     # await db.update_user_auxiliary_variable_in_database(user_id=user_id, auxiliary_variable=current_page)
     bt_choose_obj.button(
         text=f"{current_page}/{all_page}",
