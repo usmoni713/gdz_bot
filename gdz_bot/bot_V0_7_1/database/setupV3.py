@@ -1,5 +1,4 @@
 import asyncio
-from pprint import pprint
 from time import time
 from typing import Any, Literal, Self
 import asyncpg
@@ -37,7 +36,6 @@ class Database:
 
     async def _connect(self) -> None:
         """Соединяет с базой данных"""
-        # print(f"подключается к базе данных: {self.have_conn=}")
         if self.have_conn:
             return
         self._conn = await asyncpg.connect(
@@ -54,7 +52,6 @@ class Database:
         if self.need_close_conn:
             if self.have_conn:
                 await self._conn.close()
-                print(f"закрывается соединение с базой данных: {self.have_conn=}")
                 self.have_conn = False
 
     async def execute_query(
@@ -67,7 +64,6 @@ class Database:
         :param args: параметры запроса
         :return: None
         """
-        # print(f"выполняется запрос: {query=}")
         if not self.have_conn:
             await self._connect()
             await self._conn.execute(query)
@@ -336,7 +332,6 @@ class Database:
         )
 
         user_selected_book = json.loads(user_selected_book[0][0].get("selected_book"))
-        # print(f'user_selected_book: {user_selected_book}')
         user_selected_book = gdz_api.Book(**user_selected_book)
 
         return user_selected_book
@@ -372,8 +367,7 @@ class Database:
         user_class = record[0][0].get("class_")
         return user_class
 
-    async def get_user_obj(
-        self, user_id: int):
+    async def get_user_obj(self, user_id: int):
         """Получает данные пользователя из базы данных"""
         record = (
             await self.get_table_data(
@@ -505,10 +499,8 @@ async def main() -> None:
     print("Заполняем данные в Таблицу.")
     api = gdz_api.Api()
     list_of_obj_s = await api.get_chapter(9, "русский язык")
-    # print(f'{list_of_obj_s=}')
     await list_of_obj_s.get_books()
     list_of_books = list_of_obj_s.books
-    # # print(f'{list_of_books=}')
     json_data = await get_json_data_from_ls_books(list_of_books)
     list_of_obj_s = await api.get_chapter(chapter_class=4, chapter_subject="математика")
     await list_of_obj_s.get_books()

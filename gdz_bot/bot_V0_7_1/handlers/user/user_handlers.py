@@ -95,7 +95,6 @@ async def turn_over(
     user_id: int,
     db: database.Database,
 ):
-    # print(f'in handler:: db: {id(db)} db_conn: {id(db_conn)}')
     # Вызов функции для обработки перелистывание страницы для выбора учебника
     await rs.turn_over(
         callback=callback,
@@ -252,7 +251,6 @@ async def save_section__get_numbers(
     user_id: int,
     db: database.Database,
 ):
-    # print(f"{callback_data.name_section=}")
     user_book = await db.get_user_selected_book(
         user_id=user_id,
     )
@@ -291,7 +289,6 @@ async def save_number_send_answer(
         user_id=user_id,
     )
     section_structure = await user_book.get_num_structure()
-    # print(f"{section_structure[section]=}")
     numbers = section_structure[section]
     if type(numbers) == dict:
         for i in numbers.values():
@@ -305,7 +302,7 @@ async def save_number_send_answer(
                 url_num = i.url
                 break
     else:
-        print(f"[error]in user_handlers.save_number_send_answer: {numbers=}")
+        await function.inform(f"[error]in user_handlers.save_number_send_answer: {numbers=}")
     # url_num = section_structure[section]
     user_number: gdz_api.Number = gdz_api.Number(url=url_num, num="")
     # Получение ответов на вопросы по URL

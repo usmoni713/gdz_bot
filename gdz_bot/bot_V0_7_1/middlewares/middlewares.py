@@ -77,11 +77,9 @@ class creat_connection_database(BaseMiddleware):
         db.have_conn = True
         data["db"] = db
         data["db_conn"] = db._conn
-        # print(f'in midleware:: db: {id(db)} db_conn: {id(data['db_conn'])}')
         # ...
         result = await handler(event, data)
         # ...
-        print(db.have_conn)
         db.need_close_conn = True
         await db._close()
 

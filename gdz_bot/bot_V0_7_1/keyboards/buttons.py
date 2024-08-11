@@ -77,7 +77,7 @@ async def get_bt_section(structure_sections: dict):
     """Функция, которая генерирует клавиатуру с выбором раздела книги."""
 
     section_ls = structure_sections.keys()
-    print(f"\n{section_ls=}\n")
+    await function.inform(f"\n{section_ls=}\n")
     bt_section = InlineKeyboardBuilder()
     hp = 0
     for sec in section_ls:
@@ -106,7 +106,6 @@ async def get_bt_section(structure_sections: dict):
 async def get_bt_numbers(ls_numbers: list[gdz_api.Number]):
     """Функция, которая генерирует клавиатуру с выбором номера страницы"""
     bt_numbers = InlineKeyboardBuilder()
-    print(f"in get_bt_numbers\n{ls_numbers=}\n")
     for n in ls_numbers:
 
         bt_numbers.button(
