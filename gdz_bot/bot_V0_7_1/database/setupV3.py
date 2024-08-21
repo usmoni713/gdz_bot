@@ -276,6 +276,18 @@ class Database:
             qyuery,
         )
 
+    async def update_user_structure_of_numbers(
+        self,
+        user_id: int,
+        user_structure_of_numbers: list[list],
+    ):
+        """Обновляет данные пользователя в базе данных"""
+        json_data = json.dumps(user_structure_of_numbers)
+        qyuery = f"UPDATE users SET user_structure_of_numbers = '{json_data}' WHERE id_user = {user_id};"
+        await self.execute_query(
+            qyuery,
+        )
+
     async def update_user_num_url_in_database(
         self,
         user_id: int,
@@ -351,6 +363,24 @@ class Database:
 
         user_section = user_section[0][0].get("user_section")
         return user_section
+
+    async def get_user_structure_of_numbers(
+        self,
+        user_id: int,
+    ) -> list[list]:
+        """Получает данные пользователя из базы данных"""
+        user_structure_of_numbers = (
+            await self.get_table_data(
+                table_name="users",
+                field_names=("user_structure_of_numbers",),
+                conditions=f"id_user = {user_id}",
+            ),
+        )
+
+        user_structure_of_numbers = json.loads(
+            user_structure_of_numbers[0][0].get("user_structure_of_numbers")
+        )
+        return user_structure_of_numbers
 
     async def get_user_class(
         self,
@@ -470,6 +500,7 @@ table_names_with_fields = [
             ("selected_book", "JSONB"),
             ("auxiliary_variable", "INTEGER"),
             ("user_section", "TEXT"),
+            ("user_structure_of_numbers", "JSONB"),
             ("user_num_url", "TEXT"),
         ],
     ),

@@ -72,6 +72,13 @@ class choose_number_CallbackFactory(CallbackData, prefix="cnr", sep="~"):
 
     number: str
 
+class flipping_number_CallbackFactory(CallbackData, prefix="fli", sep="~"):
+    """
+    Callback factory for flipping a number.
+    """
+    current_position: int = 0
+    max_position: int
+
 
 class choose_obj_CallbackFactory(CallbackData, prefix="cobj", sep="~"):
     """

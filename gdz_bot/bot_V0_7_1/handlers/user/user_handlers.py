@@ -4,6 +4,7 @@ from GdzAPI import gdz_api
 from utils import function
 import sys
 from database import setupV3 as database
+from bot_V0_7_1.keyboards.buttons import get_bt_numbers
 
 sys.path.append(
     "d:\\gdz_bot\\GdzApi"
@@ -272,6 +273,31 @@ async def save_section__get_numbers(
     )
 
 
+# Обработчик колбека для перелистывания страниц
+@user_router.callback_query(ferma_callbacks.flipping_number_CallbackFactory.filter())
+async def flipping_number(
+    callback: CallbackQuery,
+    callback_data: ferma_callbacks.flipping_number_CallbackFactory,  # Параметр, содержащий данные колбека (например, выбранный номер)
+    user_id: int,
+    db: database.Database,
+):
+    structure_of_buttons = await db.get_user_structure_of_numbers(user_id=user_id)
+    current_position = (
+        callback_data.current_position
+        if callback_data.current_position < callback_data.max_position
+        else 0
+    )
+    ls_numbers = structure_of_buttons[current_position]
+    await callback.message.edit_text(
+        text=f"Номер: ",
+        reply_markup=await get_bt_numbers(
+            ls_numbers=ls_numbers,
+            current_position=current_position,
+            max_position=callback_data.max_position,
+        ),
+    )
+
+
 # Обработчик колбека для выбора номера и отправки ответа
 @user_router.callback_query(ferma_callbacks.choose_number_CallbackFactory.filter())
 async def save_number_send_answer(
@@ -302,7 +328,9 @@ async def save_number_send_answer(
                 url_num = i.url
                 break
     else:
-        await function.inform(f"[error]in user_handlers.save_number_send_answer: {numbers=}")
+        await function.inform(
+            f"[error]in user_handlers.save_number_send_answer: {numbers=}"
+        )
     # url_num = section_structure[section]
     user_number: gdz_api.Number = gdz_api.Number(url=url_num, num="")
     # Получение ответов на вопросы по URL

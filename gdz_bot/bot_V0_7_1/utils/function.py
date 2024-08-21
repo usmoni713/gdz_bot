@@ -1,5 +1,6 @@
 from asyncio import sleep
-import asyncio
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from filters.ferma_callbacks import *
 from pprint import pprint
 import sys
 from typing import Any
@@ -107,6 +108,34 @@ async def get_all_unique_authors(ls_books: list[gdz_api.Book]) -> list[str]:
         for author in book.authors:
             ls_authors.append(author)
     return list(set(ls_authors))
+
+
+async def split_buttons(ls_numbers: list[gdz_api.Number]):
+    """Функция, которая генерирует клавиатуру с выбором номера страницы"""
+    hp = 0
+    current_position = 0
+    stucture_of_buttons = [[]]
+    for sec in ls_numbers:
+        hp += 1
+        sec_data: str = ""
+
+        if hp > 84:
+            current_position += 1
+            stucture_of_buttons.append([])
+            hp = 0
+
+        for n in sec.num:
+
+            if (len(sec_data.encode("utf-8")) + len(n.encode("utf-8"))) > 57:
+                break
+
+            else:
+                sec_data += n
+
+        stucture_of_buttons[current_position].append(sec_data)
+    # await inform(stucture_of_buttons)
+
+    return stucture_of_buttons
 
 
 async def inform(text) -> None:

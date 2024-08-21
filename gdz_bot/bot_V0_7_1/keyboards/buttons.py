@@ -1,5 +1,5 @@
 from typing import Any
-
+import json
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from aiogram.types import InlineKeyboardButton
 import sys
@@ -77,7 +77,7 @@ async def get_bt_section(structure_sections: dict):
     """Функция, которая генерирует клавиатуру с выбором раздела книги."""
 
     section_ls = structure_sections.keys()
-    await function.inform(f"\n{section_ls=}\n")
+    # await function.inform(f"\n{section_ls=}\n")
     bt_section = InlineKeyboardBuilder()
     hp = 0
     for sec in section_ls:
@@ -103,20 +103,39 @@ async def get_bt_section(structure_sections: dict):
     return bt_section.as_markup()
 
 
-async def get_bt_numbers(ls_numbers: list[gdz_api.Number]):
+async def get_bt_numbers(ls_numbers: list[gdz_api.Number],max_position: int, current_position: int = 0, ):
     """Функция, которая генерирует клавиатуру с выбором номера страницы"""
     bt_numbers = InlineKeyboardBuilder()
+    
+
     for n in ls_numbers:
 
         bt_numbers.button(
-            text=n.num,
-            callback_data=choose_number_CallbackFactory(number=n.num),
+            text=n,
+            callback_data=choose_number_CallbackFactory(number=n),
         )
+
+    bt_numbers.button(
+        text=" < ",
+        callback_data=flipping_number_CallbackFactory(max_position=max_position, current_position=current_position-1),
+    )
+    bt_numbers.button(
+        text=" > ",
+        callback_data=flipping_number_CallbackFactory(
+            max_position=max_position, current_position=current_position+1
+        ),
+    )
+
     bt_numbers.button(
         text="< назад",
         callback_data=one_level_back_CallbackFactory(level="choose_number"),
     )
-    # bt_numbers.adjust()
+    structure_abjust = []
+    for i in range(round(len(ls_numbers) / 6)):
+        structure_abjust.append(6)
+    structure_abjust.append(2)
+    structure_abjust.append(1)
+    bt_numbers.adjust(*structure_abjust)
     return bt_numbers.as_markup()
 
 

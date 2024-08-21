@@ -10,7 +10,7 @@ from aiogram import Bot, Dispatcher
 
 from middlewares import middlewares
 
-token = "6520314433:AAEfJgzEl5mlSsy41KA6c0Dx1jopkFMV-0g"
+token = "6922595534:AAFK_4t-j_an2JhWXCsbk3_vKWY998MjwKg"
 bot = Bot(token=token)
 dp = Dispatcher()
 

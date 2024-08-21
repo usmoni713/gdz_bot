@@ -124,7 +124,6 @@ async def save_author_get_cgapter(
         user_id=user_id,
         db=db,
     )
-    await function.inform(text=user_book.cover_url)
     # await db.update_user_selected_book_in_database()
     await callback.message.answer_photo(
         photo=user_book.cover_url,
@@ -155,6 +154,7 @@ async def save_book_get_section(
         user_id=user_id,
     )
     structure_sections = await user_book.get_num_structure()
+    # await function.inform(structure_sections)
     bt_sec = await buttons_gdz.get_bt_section(structure_sections)
 
     (
@@ -202,13 +202,20 @@ async def save_section__get_numbers(
                 ls_numbers.append(j)
     elif type(numbers) == list:
         ls_numbers = list(numbers)
+    structure_of_buttons = await function.split_buttons(ls_numbers)
+    ls_numbers = structure_of_buttons[0]
     await callback.message.edit_text(
         text=f"Номер: ",
         reply_markup=await buttons_gdz.get_bt_numbers(
             ls_numbers=ls_numbers,
+            current_position=0,
+            max_position=len(structure_of_buttons) - 1,
         ),
     )
     await callback.answer()
+
+    await db.update_user_structure_of_numbers(user_id=user_id, user_structure_of_numbers=structure_of_buttons)
+
     if need_to_close_connection:
         db.need_close_conn = True
         await db._close()
