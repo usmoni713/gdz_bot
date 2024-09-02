@@ -5,10 +5,9 @@ import asyncpg
 import json
 import sys
 from random import randint
+import config
 
-sys.path.append(
-    "d:\\fast-gdz\\gdz_bot"
-)  # Добавление пути в список путей для поиска модулей
+sys.path.append(config.path_to_Gdz)  # Добавление пути в список путей для поиска модулей
 from GdzAPI import gdz_api as gdz_api
 
 
@@ -522,27 +521,41 @@ field_names = [
 
 async def main() -> None:
     """Главная функция"""
-    db = Database()
+    db_name = config.db_name
+    db_user = config.db_user
+    db_password = config.db_password
+    db_host = config.db_host
+    db_port = config.db_port
+    print(
+        f"Подключаемся к базе данных {db_name=}, {db_user=}, {db_password=}, {db_host=}, {db_port=}"
+    )
+    db = Database(
+        db_name,
+        db_user,
+        db_password,
+        db_host,
+        db_port,
+    )
 
     print("Создаем таблицы")
     await db.create_tables(table_names_with_fields)
 
-    print("Заполняем данные в Таблицу.")
-    api = gdz_api.Api()
-    list_of_obj_s = await api.get_chapter(9, "русский язык")
-    await list_of_obj_s.get_books()
-    list_of_books = list_of_obj_s.books
-    json_data = await get_json_data_from_ls_books(list_of_books)
-    list_of_obj_s = await api.get_chapter(chapter_class=4, chapter_subject="математика")
-    await list_of_obj_s.get_books()
-    list_of_books = list_of_obj_s.books
-    json_data1 = await get_json_data_from_ls_books(list_of_books)
-    selected_book = await get_json_data_from_ls_books([list_of_books[0]])
-    selected_book1 = await get_json_data_from_ls_books([list_of_books[1]])
-    values = (
-        (123468978, 11, json_data, json_data1, 0, selected_book),
-        (357, 4, json_data1, json_data, 0, selected_book1),
-    )
+    # print("Заполняем данные в Таблицу.")
+    # api = gdz_api.Api()
+    # list_of_obj_s = await api.get_chapter(9, "русский язык")
+    # await list_of_obj_s.get_books()
+    # list_of_books = list_of_obj_s.books
+    # json_data = await get_json_data_from_ls_books(list_of_books)
+    # list_of_obj_s = await api.get_chapter(chapter_class=4, chapter_subject="математика")
+    # await list_of_obj_s.get_books()
+    # list_of_books = list_of_obj_s.books
+    # json_data1 = await get_json_data_from_ls_books(list_of_books)
+    # selected_book = await get_json_data_from_ls_books([list_of_books[0]])
+    # selected_book1 = await get_json_data_from_ls_books([list_of_books[1]])
+    # values = (
+    #     (123468978, 11, json_data, json_data1, 0, selected_book),
+    #     (357, 4, json_data1, json_data, 0, selected_book1),
+    # )
 
     # values1 = (
     #     (123456789789, json_data1),
@@ -555,12 +568,12 @@ async def main() -> None:
     #     user_id=123456789789, auxiliary_variable=200
     # )
 
-    print("Получаем данные из таблицы и вводим на экран.")
-    await db.update_user_num_url_in_database(
-        user_id=123456789789, num_url="http://example.com"
-    )
-    us_n_url = await db.get_user_num_url(user_id=123456789789)
-    print(f"{us_n_url=}")
+    # print("Получаем данные из таблицы и вводим на экран.")
+    # await db.update_user_num_url_in_database(
+    #     user_id=123456789789, num_url="http://example.com"
+    # )
+    # us_n_url = await db.get_user_num_url(user_id=123456789789)
+    # print(f"{us_n_url=}")
     # await db.update_user_section_in_database(user_id=123456789789, user_section="page_1")
     # rec = await db.get_user_section(user_id=123456789789)
     # print(f"{rec=}")
