@@ -8,8 +8,7 @@ sys.path.append(
     "d:\\gdz_bot\\GdzApi"
 )  # Добавление пути в список путей для поиска модулей
 from GdzAPI import gdz_api
-from database.config import ls_full_obj
-from utils import function
+# from utils import function
 from filters.ferma_callbacks import *
 import logging
 from database import setupV3 as database

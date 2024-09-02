@@ -24,7 +24,7 @@ logging.basicConfig(
 # Инициализируем логгер модуля
 
 logger = logging.getLogger(__name__)
-logger.info("started!")
+logger.error("started!")
 
 
 async def main_():
