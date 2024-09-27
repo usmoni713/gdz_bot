@@ -6,7 +6,7 @@ import json
 import sys
 from random import randint
 
-path_to_Gdz = "d:\\fast-gdz\\gdz_bot"
+path_to_Gdz = "d:\\fast-gdz\\gdz_bot" 
 sys.path.append(path_to_Gdz)  # Добавление пути в список путей для поиска модулей
 
 from bot_V0_7_1.database import config
