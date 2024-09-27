@@ -5,9 +5,10 @@ from aiogram.types import InlineKeyboardButton
 import sys
 
 sys.path.append(
-    "d:\\gdz_bot\\GdzApi"
+    "\\home\\alex\\gdz_bot\\gdz_bot"
 )  # Добавление пути в список путей для поиска модулей
 from GdzAPI import gdz_api
+
 # from utils import function
 from filters.ferma_callbacks import *
 import logging
@@ -102,10 +103,13 @@ async def get_bt_section(structure_sections: dict):
     return bt_section.as_markup()
 
 
-async def get_bt_numbers(ls_numbers: list[gdz_api.Number],max_position: int, current_position: int = 0, ):
+async def get_bt_numbers(
+    ls_numbers: list[gdz_api.Number],
+    max_position: int,
+    current_position: int = 0,
+):
     """Функция, которая генерирует клавиатуру с выбором номера страницы"""
     bt_numbers = InlineKeyboardBuilder()
-    
 
     for n in ls_numbers:
 
@@ -116,12 +120,14 @@ async def get_bt_numbers(ls_numbers: list[gdz_api.Number],max_position: int, cur
 
     bt_numbers.button(
         text=" < ",
-        callback_data=flipping_number_CallbackFactory(max_position=max_position, current_position=current_position-1),
+        callback_data=flipping_number_CallbackFactory(
+            max_position=max_position, current_position=current_position - 1
+        ),
     )
     bt_numbers.button(
         text=" > ",
         callback_data=flipping_number_CallbackFactory(
-            max_position=max_position, current_position=current_position+1
+            max_position=max_position, current_position=current_position + 1
         ),
     )
 

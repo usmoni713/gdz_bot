@@ -2,8 +2,9 @@ from typing import Any
 from bot_V0_7_1.keyboards import buttons as buttons_gdz
 from utils import function
 import sys
+from config import path_to_bot
 
-sys.path.append("d:\\fast-gdz\\gdz_bot")
+sys.path.append(path_to_bot)
 # D:\fast-gdz\gdz_bot
 from GdzAPI import gdz_api
 from filters import ferma_callbacks
@@ -214,7 +215,9 @@ async def save_section__get_numbers(
     )
     await callback.answer()
 
-    await db.update_user_structure_of_numbers(user_id=user_id, user_structure_of_numbers=structure_of_buttons)
+    await db.update_user_structure_of_numbers(
+        user_id=user_id, user_structure_of_numbers=structure_of_buttons
+    )
 
     if need_to_close_connection:
         db.need_close_conn = True

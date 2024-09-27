@@ -2,7 +2,8 @@ import asyncio, logging
 import sys
 
 #
-sys.path.append("d:\\fast-gdz\\gdz_bot")
+from config import path_to_bot
+sys.path.append(path_to_bot)
 
 from handlers.user import user_handlers
 
@@ -10,7 +11,8 @@ from aiogram import Bot, Dispatcher
 
 from middlewares import middlewares
 
-token = "7484059012:AAH6liDoRqTEYdfP-v5Tj1210Ld37jLriZo"
+# token = "7484059012:AAH6liDoRqTEYdfP-v5Tj1210Ld37jLriZo"
+token = "6520314433:AAHWyfW8RyZdXrTVpDAZ1t4RZ3hUPNuWpPo"
 bot = Bot(token=token)
 dp = Dispatcher()
 

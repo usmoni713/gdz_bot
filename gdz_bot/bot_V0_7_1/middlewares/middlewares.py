@@ -1,11 +1,11 @@
+sys.path.append("\\home\\alex\\gdz_bot\\gdz_bot")
+import sys
 from database import config as cfg
 from bot_V0_7_1.keyboards.buttons import btn_subscribe
 from typing import Any, Awaitable, Callable, Dict
-import sys
 from aiogram.types.chat_member_banned import ChatMemberStatus
 from database import setupV3 as database
 
-sys.path.append("d:\\fast-gdz\\gdz_bot")
 
 
 from aiogram import BaseMiddleware

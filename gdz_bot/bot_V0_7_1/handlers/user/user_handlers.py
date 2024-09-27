@@ -1,14 +1,13 @@
+import sys
+sys.path.append(
+    "\\home\\alex\\gdz_bot\\gdz_bot"
+)  # Добавление пути в список путей для поиска модулей
+
 import logging
 from typing import Any
-from GdzAPI import gdz_api
 from utils import function
-import sys
 from database import setupV3 as database
 from bot_V0_7_1.keyboards.buttons import get_bt_numbers
-
-sys.path.append(
-    "d:\\gdz_bot\\GdzApi"
-)  # Добавление пути в список путей для поиска модулей
 from GdzAPI import gdz_api
 from filters import ferma_callbacks
 from aiogram import Router, F
@@ -22,8 +21,6 @@ user_router = Router()
 logger = logging.getLogger(__name__)
 logger.info("started!")
 from handlers.user import responder as rs
-
-user_ = {}
 
 
 # Обработчик для команды "/start"
