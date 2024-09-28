@@ -12,18 +12,8 @@ from database import setupV3 as database
 
 
 async def one_level_back(
-    level: str,
-    callback: CallbackQuery,
-    user_id: int,
-    db: database.Database | None = None,
-) -> None:
-    need_close_conn = False
-
-    if db is None:
-        db = database.Database()
-        await db._connect()
-
-        need_close_conn = True
+    level: str, callback: CallbackQuery, user_id: int, db: database.Database
+):
     """Функция, которая обрабатывает нажатие кнопки "назад" на различных уровнях."""
     if level == levels.choose_obj:
         await rs.start(message=callback.message)
@@ -33,31 +23,27 @@ async def one_level_back(
         await callback.message.delete()
         # Delete turn over message and send object message.
         user_class = await db.get_user_class(user_id=user_id)
-        await rs.send_obj(callback=callback, user_class=user_class, edit_text=False)  # type: ignore
+        await rs.send_obj(callback=callback, user_class=user_class, edit_text=False)
 
     elif level == levels.choose_section:
         await callback.message.delete()
         # Delete section message and turn over.
-        await rs.turn_over(callback=callback, user_id=user_id)
+        await rs.turn_over(callback=callback, user_id=user_id, db=db)
 
     elif level == levels.choose_number:
-        await rs.save_book_get_section(callback=callback, user_id=user_id, edit_text=True)  # type: ignore
+        await rs.save_book_get_section(
+            callback=callback, user_id=user_id, edit_text=True, db=db
+        )
         # Save book with new section number and get section.
-    if need_close_conn:
-        db.need_close_conn = True
-        await db._close()
 
 
 async def get_instance__dc_for_choose_book(
-    for_sl_book: bool = False, user_id: int = 1234, db: database.Database | None = None
+    db: database.Database,
+    for_sl_book: bool = False,
+    user_id: int = 1234,
 ) -> gdz_api.Book:
     """Функция, которая возвращает книгу из списка книг пользователя для выбора.
     Возвращает экземпляр книги."""
-    need_close_conn = False
-    if db is None:
-        db = database.Database()
-        await db._connect()
-        need_close_conn = True
 
     c = await db.get_user_auxiliary_variable(user_id=user_id)
     if not for_sl_book:
@@ -67,30 +53,21 @@ async def get_instance__dc_for_choose_book(
     if c > len(user_chapter):
         c = c % len(user_chapter)
     user_book = user_chapter[c]
-    if need_close_conn:
-        db.need_close_conn = True
-        db._close()
     return user_book
 
 
 async def delete_unnecessary_data(
-    user_id: int = 1234, db: database.Database | None = None
+    db: database.Database,
+    user_id: int = 1234,
 ) -> None:
     """Функция, которая удаляет ненужные данные из словаря пользователя"""
-    need_close_conn = False
-    if db is None:
-        db = database.Database()
-        await db._connect()
-        need_close_conn = True
+
     await db.update_user_auxiliary_variable_in_database(
         user_id=user_id, auxiliary_variable=0
     )
     await db.update_user_chapter_in_database(user_id=user_id, user_books=[])
     await db.update_user_selected_book_in_database(user_id=user_id, user_book=None)
     await db.update_user_section_in_database(user_id=user_id, user_section=None)
-    if need_close_conn:
-        db.need_close_conn = True
-        await db._close()
 
 
 async def get_all_unique_authors(ls_books: list[gdz_api.Book]) -> list[str]:

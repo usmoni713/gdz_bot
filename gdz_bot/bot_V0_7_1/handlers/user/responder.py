@@ -54,17 +54,12 @@ async def send_obj(
 async def save_obj_get_author(
     callback: CallbackQuery,
     callback_data: ferma_callbacks.choose_obj_CallbackFactory,
+    db: database.Database,
     user_id: int = 1234,
-    db: database.Database | None = None,
 ):
     """Функция, которая отправляет сообщение с выбором предмета
     на основе переданных данных пользов
     need_to_close_connection = Falseателя. Возвращает None."""
-    need_to_close_connection = False
-    if db is None:
-        db = database.Database()
-        await db._connect()
-        need_to_close_connection = True
     user_class = await db.get_user_class(user_id=user_id)
     chapter: gdz_api.Chapter = await gdz_api.Api().get_chapter(
         chapter_class=user_class, chapter_subject=callback_data.obj
@@ -80,9 +75,6 @@ async def save_obj_get_author(
     )
     await db.update_user_obj_in_database(user_id=user_id, user_obj=callback_data.obj)
     await callback.answer()
-    if need_to_close_connection:
-        db.need_close_conn = True
-        await db._close()
 
 
 async def save_author_get_cgapter(
@@ -94,11 +86,6 @@ async def save_author_get_cgapter(
     """Функция, которая отправляет сообщение с выбором предмета
     на основе переданных данных пользов
     need_to_close_connection = Falseателя. Возвращает None."""
-    need_to_close_connection = False
-    if db is None:
-        db = database.Database()
-        await db._connect()
-        need_to_close_connection = True
     user_class = await db.get_user_class(user_id=user_id)
     user_obj = await db.get_user_obj(user_id=user_id)
     chapter: gdz_api.Chapter = await gdz_api.Api().get_chapter(
@@ -128,25 +115,17 @@ async def save_author_get_cgapter(
         reply_markup=await buttons_gdz.creat_bt_choose_book(user_id=user_id, db=db),
     )
     await callback.answer()
-    if need_to_close_connection:
-        db.need_close_conn = True
-        await db._close()
 
 
 async def save_book_get_section(
     callback: CallbackQuery,
+    db: database.Database,
     user_id: int,
     edit_text=False,
-    db: database.Database | None = None,
 ) -> None:
     """Функция, которая отправляет сообщение с выбором секции
     на основе переданных данных пользователя. Возвращает None.
     """
-    need_to_close_connection = False
-    if db is None:
-        db = database.Database()
-        await db._connect()
-        need_to_close_connection = True
     user_book = await db.get_user_selected_book(
         user_id=user_id,
     )
@@ -166,25 +145,17 @@ async def save_book_get_section(
         )
     )
     await callback.answer()
-    if need_to_close_connection:
-        db.need_close_conn = True
-        await db._close()
 
 
 async def save_section__get_numbers(
     callback: CallbackQuery,
     user_section: str,
+    db: database.Database,
     user_id: int,
-    db: database.Database | None = None,
 ) -> None:
     """Эта функция отправляет сообщение с выбором номера
     (в выбранной секции). Возвращает None.
     """
-    need_to_close_connection = False
-    if db is None:
-        db = database.Database()
-        await db._connect()
-        need_to_close_connection = True
     user_book = await db.get_user_selected_book(
         user_id=user_id,
     )
@@ -215,10 +186,6 @@ async def save_section__get_numbers(
         user_id=user_id, user_structure_of_numbers=structure_of_buttons
     )
 
-    if need_to_close_connection:
-        db.need_close_conn = True
-        await db._close()
-
 
 # Эта функция перелистывает страницы для выбора учебника
 # Если передан параметр for_sl_book, то переход происходит
@@ -230,21 +197,17 @@ async def save_section__get_numbers(
 # иначе нужно перейти на первую страницу (add_current_page=0).
 async def turn_over(
     user_id: int,
+    db: database.Database,
     message: Message = None,
     add_current_page: int = 0,
     for_sl_book: bool = False,
     callback: CallbackQuery = None,
     edit_text: bool = False,
-    db: database.Database | None = None,
 ) -> None:
     """Функция, которая позволяет пользователю перелистывать
     страницы для выбора учебника. Возвр
     need_to_close_connection = Falseащает None."""
-    need_to_close_connection = False
-    if db is None:
-        db = database.Database()
-        await db._connect()
-        need_to_close_connection = True
+
     # c= await db.get_user_auxiliary_variable(user_id=user_id)
     c = await db.get_user_auxiliary_variable(
         user_id=user_id,
@@ -292,9 +255,6 @@ async def turn_over(
         )
     )
     await callback.answer() if not for_sl_book else None
-    if need_to_close_connection:
-        db.need_close_conn = True
-        await db._close()
 
 
 async def send_meny(message: Message) -> None:

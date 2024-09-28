@@ -137,14 +137,8 @@ async def get_bt_numbers(
     return bt_numbers.as_markup()
 
 
-async def generate_bt_choose_sl_book(user_id: int, db: database.Database | None = None):
+async def generate_bt_choose_sl_book(user_id: int, db: database.Database):
     """Функция, которая создает клавиатуру для выбора книги и перелистывания"""
-    need_close_db = False
-    if db is None:
-        db = database.Database()
-        await db._connect()
-        need_close_db = True
-
     c = await db.get_user_auxiliary_variable(user_id=user_id)
     current_page = c + 1
     ls_selected = await db.get_user_selected_books(user_id=user_id)
@@ -199,54 +193,38 @@ async def generate_bt_choose_sl_book(user_id: int, db: database.Database | None 
         callback_data=one_level_back_CallbackFactory(level="turn_over"),
     )
     bt_choose_obj.adjust(3, 2, 2, 1)
-    if need_close_db:
-        db.need_close_conn = True
-        await db._close()
     return bt_choose_obj.as_markup()
 
 
-async def creat_bt_choose_author(
-    ls_authors: list[str], db: database.Database | None = None
-):
+async def creat_bt_choose_author(ls_authors: list[str], db: database.Database):
     """Функция, которая создает клавиатуру для выбора автора"""
 
     bt_choose_author = InlineKeyboardBuilder()
-
-    need_close_conn = False
-    if db is None:
-        db = database.Database()
-        db._conn()
-        need_close_conn = True
 
     for author in ls_authors:
         bt_choose_author.button(
             text=author,
             callback_data=choose_author_CallbackFactory(author=author),
         )
-    if need_close_conn:
-        db.need_close_conn = True
-        await db._close()
-        db.need_close_conn = False
+
     bt_choose_author.adjust(2)
     return bt_choose_author.as_markup()
 
 
 async def creat_bt_choose_book(
-    user_id: int, for_sl_book: bool = False, db: database.Database | None = None
+    user_id: int,
+    db: database.Database,
+    for_sl_book: bool = False,
 ):
     """Функция, которая создает клавиатуру для выбора книги и перелистывания"""
     if for_sl_book:
-        bt_choose_books = await generate_bt_choose_sl_book(user_id=user_id)
+        bt_choose_books = await generate_bt_choose_sl_book(user_id=user_id, db=db)
         return bt_choose_books
     bt_choose_obj = InlineKeyboardBuilder()
     bt_choose_obj.button(
         text="<", callback_data=turn_over_CallbackFactory(add_current_page=-1, name="<")
     )
-    need_close_conn = False
-    if db is None:
-        db = database.Database()
-        db._conn()
-        need_close_conn = True
+    
     user_chapter = await db.get_user_chapter(user_id=user_id)
     c = await db.get_user_auxiliary_variable(user_id=user_id)
     all_page = len(user_chapter)
@@ -275,10 +253,6 @@ async def creat_bt_choose_book(
         callback_data=one_level_back_CallbackFactory(level="turn_over"),
     )
     bt_choose_obj.adjust(3, 1, 1)
-    if need_close_conn:
-        db.need_close_conn = True
-        await db._close()
-        db.need_close_conn = False
     return bt_choose_obj.as_markup()
 
 

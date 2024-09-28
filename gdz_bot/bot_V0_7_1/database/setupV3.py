@@ -1,4 +1,5 @@
 import sys
+
 path_to_Gdz = "\\home\\alex\\gdz_bot\\gdz_bot"
 sys.path.append(path_to_Gdz)  # Добавление пути в список путей для поиска модулей
 import asyncio
@@ -31,13 +32,9 @@ class Database:
         self._db_port: int = db_port
         self._conn: asyncpg.Connection | None = None
         self.have_conn: bool = False
-        self.need_close_conn: bool = False
-        self.db_id = randint(1000, 999999)
 
     async def _connect(self) -> None:
         """Соединяет с базой данных"""
-        if self.have_conn:
-            return
         self._conn = await asyncpg.connect(
             database=self._db_name,
             user=self._db_user,
@@ -49,10 +46,9 @@ class Database:
 
     async def _close(self) -> None:
         """Закрывает соединение с базой данных"""
-        if self.need_close_conn:
-            if self.have_conn:
-                await self._conn.close()
-                self.have_conn = False
+        if self.have_conn:
+            await self._conn.close()
+            self.have_conn = False
 
     async def execute_query(
         self,
@@ -67,7 +63,6 @@ class Database:
         if not self.have_conn:
             await self._connect()
             await self._conn.execute(query)
-            await self._close()
         else:
             await self._conn.execute(query)
 
@@ -77,11 +72,11 @@ class Database:
     ) -> None:
         """Создает таблицы в базе данных и их столбцы"""
         # Соединяемся с базой данных
-        await self._connect()
+
         # Если таблицы еще не существуют,
         # то создаем их
         for table_name, fields in table_names_with_fields:
-            await self._conn.execute(
+            await self.execute_query(
                 f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(map(lambda field_with_type: f'{field_with_type[0]} {field_with_type[1]}', fields))});"
             )
         await self._close()
@@ -137,8 +132,7 @@ class Database:
         records = await self._conn.fetch(f"{query};")
 
         # Закрываем соединение
-        if not self.have_conn:
-            await self._close()
+
 
         return records
 

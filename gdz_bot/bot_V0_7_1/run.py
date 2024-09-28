@@ -2,6 +2,7 @@ import asyncio, logging
 import sys
 
 from config import path_to_bot, TOKEN_BOT
+
 sys.path.append(path_to_bot)
 
 from handlers.user import user_handlers
@@ -31,18 +32,10 @@ async def main_():
     Регистрирует роутеры в диспетчере и запускает LongPoll.
     """
     dp.update.middleware(
-        middleware=middlewares.check_new_user()
+        middleware=middlewares.CheckNewUser()
     )  # Добавление middleware для проверки на новых пользователей
-    dp.update.middleware(middleware=middlewares.creat_connection_database())
     # Проверка на подписку
-    dp.update.middleware(
-        middleware=middlewares.chec_sub()
-    )  # Добавление middleware для проверки на подписку
-
-    dp.update.middleware(
-        middlewares.get_user_id_database()
-    )  # Добавление middleware для получения ID пользователя из базы данных
-
+  
     # Регистрируем роутеры в диспетчере
     dp.include_router(user_handlers.user_router)
 

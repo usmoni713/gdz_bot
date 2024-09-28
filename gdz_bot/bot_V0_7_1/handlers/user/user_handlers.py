@@ -261,7 +261,7 @@ async def save_section__get_numbers(
 
     # Вызов функции для обработки выбора раздела и получения номеров
     await rs.save_section__get_numbers(
-        callback=callback, user_section=user_section, user_id=user_id
+        callback=callback, user_section=user_section, user_id=user_id, db=db
     )
 
 
@@ -336,7 +336,7 @@ async def save_number_send_answer(
         await callback.message.answer_photo(photo=url, caption=name)
 
     # Удаление ненужных данных о пользователе
-    await function.delete_unnecessary_data(user_id=user_id)
+    await function.delete_unnecessary_data(user_id=user_id, db=db)
 
     # Отправка сообщения с главным меню
     await rs.send_meny(message=callback.message)
@@ -413,6 +413,7 @@ async def one_level_back(
         level=callback_data.level,  # Передача уровня возврата в функцию
         callback=callback,
         user_id=user_id,
+        db=db,
     )
 
     await callback.answer()
