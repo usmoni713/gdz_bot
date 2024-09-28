@@ -1,12 +1,5 @@
-from typing import Any
-import json
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
-from aiogram.types import InlineKeyboardButton
-import sys
 
-sys.path.append(
-    "\\home\\alex\\gdz_bot\\gdz_bot"
-)  # Добавление пути в список путей для поиска модулей
 from GdzAPI import gdz_api
 
 # from utils import function

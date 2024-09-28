@@ -1,11 +1,7 @@
 from typing import Any
 from bot_V0_7_1.keyboards import buttons as buttons_gdz
 from utils import function
-import sys
-from config import path_to_bot
 
-sys.path.append(path_to_bot)
-# D:\fast-gdz\gdz_bot
 from GdzAPI import gdz_api
 from filters import ferma_callbacks
 from database import setupV3 as database

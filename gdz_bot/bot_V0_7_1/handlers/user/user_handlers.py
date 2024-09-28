@@ -1,8 +1,3 @@
-import sys
-sys.path.append(
-    "\\home\\alex\\gdz_bot\\gdz_bot"
-)  # Добавление пути в список путей для поиска модулей
-
 import logging
 from typing import Any
 from utils import function

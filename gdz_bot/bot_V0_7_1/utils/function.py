@@ -1,17 +1,9 @@
-from asyncio import sleep
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 from filters.ferma_callbacks import *
 from pprint import pprint
-import sys
-from typing import Any
-
-sys.path.append("\\home\\alex\\gdz_bot\\gdz_bot")
 from GdzAPI import gdz_api
-import bs4
-import bs4, aiohttp, logging
+import logging
 from bot_V0_7_1.utils.levels import levels
-from bot_V0_7_1.keyboards import buttons as buttons_gdz
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import CallbackQuery
 from handlers.user import responder as rs
 
 logger = logging.getLogger(__name__)
