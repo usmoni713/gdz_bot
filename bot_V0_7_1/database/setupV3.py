@@ -1,6 +1,6 @@
 import sys
 
-path_to_Gdz = "\\home\\alex\\gdz_bot\\gdz_bot"
+path_to_Gdz = "\\home\\alex\\gdz_bot"
 sys.path.append(path_to_Gdz)  # Добавление пути в список путей для поиска модулей
 import asyncio
 from time import time

@@ -4,7 +4,7 @@ db_password: str = "12345678"
 db_host: str = "localhost"
 db_port: int = 5432
 
-path_to_bot = "\\home\\alex\\gdz_bot\\gdz_bot"
+path_to_bot = "\\home\\alex\\gdz_bot"
 TOKEN_BOT = "7484059012:AAH6liDoRqTEYdfP-v5Tj1210Ld37jLriZo"
 
 # db_name: str = "db_test"
@@ -13,7 +13,7 @@ TOKEN_BOT = "7484059012:AAH6liDoRqTEYdfP-v5Tj1210Ld37jLriZo"
 # db_host: str = "localhost"
 # db_port: int = 5432
 
-# path_to_bot = "D:\\fast-gdz\\gdz_bot"
+# path_to_bot = "D:\\fast-gdz"
 # TOKEN_BOT = "6520314433:AAHWyfW8RyZdXrTVpDAZ1t4RZ3hUPNuWpPo"
 
 
